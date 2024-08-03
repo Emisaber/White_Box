@@ -32,13 +32,13 @@ export const defaultContentPageLayout: PageLayout = {
         title: "Recent Notes",
         limit: 4,
         filter: (f) =>
-          f.slug!.startsWith("Nosts/"),
+          f.slug!.startsWith("Notes/"),
         linkToMore: "Notes/" as SimpleSlug,
       }),
     ),
     Component.DesktopOnly(
       Component.RecentNotes({
-        title: "Recent Notes",
+        title: "Recent Thoughts",
         limit: 2,
         filter: (f) => f.slug!.startsWith("Thoughts/"),
         linkToMore: "Thoughts/" as SimpleSlug,
