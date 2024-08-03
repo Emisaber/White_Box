@@ -1,4 +1,4 @@
-- [ ] 待补
+
 **rectified linear activation funtion or ReLU**    ReLU通过正负区分输入  
 基本是默认的激活函数  
 
