@@ -1,6 +1,6 @@
 ---
-title: White Box
+title: A White Box that showed to public
 ---
 
-**A White Box that showed to public**
+
 
