@@ -33,7 +33,7 @@ export const defaultContentPageLayout: PageLayout = {
         limit: 4,
         filter: (f) =>
           f.slug!.startsWith("Nosts/"),
-        linkToMore: "Nosts/" as SimpleSlug,
+        linkToMore: "Notes/" as SimpleSlug,
       }),
     ),
     Component.DesktopOnly(
