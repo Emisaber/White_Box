@@ -1,6 +1,5 @@
 ---
-title: Welcome to Quartz
+title: White Box
 ---
+A White Box that showed to public
 
-This is a blank Quartz installation.
-See the [documentation](https://quartz.jzhao.xyz) for how to get started.
