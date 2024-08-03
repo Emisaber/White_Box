@@ -29,7 +29,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Darkmode(),
     Component.DesktopOnly(
       Component.RecentNotes({
-        title: "Recent Notes",
+        title: "Notes",
         limit: 4,
         filter: (f) =>
           f.slug!.startsWith("Notes/"),
@@ -38,7 +38,7 @@ export const defaultContentPageLayout: PageLayout = {
     ),
     Component.DesktopOnly(
       Component.RecentNotes({
-        title: "Recent Thoughts",
+        title: "Thoughts",
         limit: 2,
         filter: (f) => f.slug!.startsWith("Thoughts/"),
         linkToMore: "Thoughts/" as SimpleSlug,
