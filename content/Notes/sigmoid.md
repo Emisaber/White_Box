@@ -24,12 +24,13 @@ $$c\ sigmoid(b+wx) = c \frac{1}{1+e^{-(b+wx)}}$$
 $$y = b+\sum_ic_i\ sigmoid(b_i+w_ix_i)$$
 
 传入多元线性   
-$$y = b + \sum_ic_i\ sigmoid(b_i+\sum_jw_{ij}x_j)$$
+$$y = b + \sum_ic_i\ sigmoid(b_i+\sum_jw_{ij}x_j)$$  
+
 简写(向量化)  
 $$\textbf{r} = \textbf{b} + \textbf{w}\textbf{x}$$
 $$y = b + \textbf{c}^Tsigmoid(\textbf{b} + \textbf{w}\textbf{x})$$  
 
 ## references
-- [Site Unreachable](https://machinelearningmastery.com/a-gentle-introduction-to-sigmoid-function/)
-- [Site Unreachable](https://www.analyticsvidhya.com/blog/2023/01/why-is-sigmoid-function-important-in-artificial-neural-networks/#:~:text=The%20sigmoid%20is%20a%20mathematical%20function%20t%20hat,useful%20for%20binary%20classification%20and%20logistic%20regression%20problems.)
+- [A Gentle Introduction To Sigmoid Function](https://machinelearningmastery.com/a-gentle-introduction-to-sigmoid-function/)
+- [How to Understand Sigmoid Function in Artificial Neural Networks?](https://www.analyticsvidhya.com/blog/2023/01/why-is-sigmoid-function-important-in-artificial-neural-networks/#:~:text=The%20sigmoid%20is%20a%20mathematical%20function%20t%20hat,useful%20for%20binary%20classification%20and%20logistic%20regression%20problems.)
 

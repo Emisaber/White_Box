@@ -26,6 +26,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
     Component.Search(),
+    Component.MobileOnly(Component.Darkmode()),
     Component.DesktopOnly(
       Component.RecentNotes({
         title: "Notes",
@@ -45,7 +46,8 @@ export const defaultContentPageLayout: PageLayout = {
     ),
   ],
   right: [
-    Component.Darkmode(),
+    Component.DesktopOnly(Component.Darkmode()),
+    Component.Graph(),
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
   ],
