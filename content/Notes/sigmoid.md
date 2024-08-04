@@ -1,6 +1,6 @@
-$$sigmoid(x) = \frac{1}{1+e^{-x}}$$
+$$sigmoid(x) = \frac{1}{1+e^{-x}}$$  
 or   
-$$sigmoid(x) = \frac{e^x}{e^x + 1}$$
+$$sigmoid(x) = \frac{e^x}{e^x + 1}$$  
 - s-shaped -- 拟合折线和曲线
 - logistic function 逻辑函数  
 - 可以用于分类  -- 计算概率
