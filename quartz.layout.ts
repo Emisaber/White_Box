@@ -29,7 +29,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.DesktopOnly(
       Component.RecentNotes({
         title: "Notes",
-        limit: 4,
+        limit: 3,
         filter: (f) =>
           f.slug!.startsWith("Notes/"),
         linkToMore: "Notes/" as SimpleSlug,
