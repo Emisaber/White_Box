@@ -272,7 +272,7 @@ look into the future
 
 另一个角度  
 NAG中参数更新为  
-![Pasted image 20240812121405](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240812121405.png)
+![Pasted image 20240812121405](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240812121405.png)  
 SGDM中参数更新为  
 ![Pasted image 20240812121449](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240812121449.png)  
 可以写成  
