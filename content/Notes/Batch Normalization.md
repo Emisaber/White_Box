@@ -1,4 +1,4 @@
-
+### Overview
 training deep neural networks with tens of layers is challenging as they can be sensitive to the **initial random weights** and **configuration of the learning algorithm.**    
 
 one possible reason is the distribution of the inputs to the deep layers may change after each mini-batch when the weights are updated(深层的输入分布随着权重改变发生变化). This can cause the learning algorithm to forever chase a moving target. (不断改变的输入分布难以找到和目标分布的正确映射)   
