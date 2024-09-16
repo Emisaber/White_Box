@@ -62,9 +62,9 @@ What's more, although clean data is neceesary for high-accuracy models, if clean
 	- change makes the image darker or brighter, greyscaled or extremely saturated, less or more contrasted.
 - **Mixing Image** 
 	- blending and mixing multiple images
-	- [[Course/Machine Learning/CutMix and MixUp In Pytorch]]
+	- [[CutMix and MixUp In Pytorch]]
 - Normalization
-	- [[Course/Machine Learning/Normalize Images In Pytorch]]
+	- [[Normalize Images In Pytorch]]
 
 To apply augmentation  
 - Apply a single augmentation or a sequence  
