@@ -74,7 +74,8 @@ plt.ylabel("relative frequency")
 plt.title("distribution of pixels")
 ```
 
-value transform into $[0., 1.]$
+value transform into $[0., 1.]$  
+
 ![Pasted image 20240916090506](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240916090506.png)  
 
 Calculate mean and std  
