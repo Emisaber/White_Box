@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 ## Example Application
 
 ### Slot filling

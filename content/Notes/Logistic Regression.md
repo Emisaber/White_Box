@@ -1,3 +1,8 @@
+---
+tags:
+  - DL
+  - ML
+---
 
 书接[[Classification]]  
 $$P_{w,b}(C|x) = \sigma(z)$$  

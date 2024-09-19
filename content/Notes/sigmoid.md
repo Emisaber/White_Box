@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 $$sigmoid(x) = \frac{1}{1+e^{-x}}$$  
 or   
 $$sigmoid(x) = \frac{e^x}{e^x + 1}$$  

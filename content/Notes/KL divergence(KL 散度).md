@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 **Kullback–Leibler (KL) divergence** (also called **relative entropy** and **I-divergence**)  
 denoted $D_{KL}(P||Q)$，is a type of statistical distance.  
 **measure how one probability distribution P is different from a second, reference probability distribution Q**  

@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 ## How to do Classification
 
 用宝可梦的种族值描述宝可梦作为输入  

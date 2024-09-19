@@ -1,3 +1,8 @@
+---
+tags:
+  - DL
+  - ML
+---
 
 training deep neural networks with tens of layers is challenging as they can be sensitive to the **initial random weights** and **configuration of the learning algorithm.**    
 

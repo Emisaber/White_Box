@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 > `torchvision.transforms` 更新了，所以一部分代码可能得改成`torchvision.transforms.v2`  
 
 When an image is transformed into a PyTorch tensor, the pixel values are scaled between 0.0 and 1.0.  

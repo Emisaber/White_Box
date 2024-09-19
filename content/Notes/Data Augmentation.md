@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 # Data Augmentation
 
 > _Data Augmentation is a technique used to artificially increase dataset size._

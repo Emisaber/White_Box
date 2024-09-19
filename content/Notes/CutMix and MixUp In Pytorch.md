@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 ### MixUp and CutMix
 Mixup： blend images together   
 CutMix:  Cut off a part of pixel and fill with pixel from other images 

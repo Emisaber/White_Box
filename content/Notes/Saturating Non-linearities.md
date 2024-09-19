@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 ### references
 - [Saturating Non-Linearities | Baeldung on Computer Science](https://www.baeldung.com/cs/saturating-non-linearities)
 ### Non-linearity

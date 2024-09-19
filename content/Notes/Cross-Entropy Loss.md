@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 cross-entropy is a measure from the field of information theory, generally calculating the difference between two probability distributions  
 
 [[KL divergence(KL 散度)]] calculate the relative entropy between two probability distributions, while cross-entropy calculate the total entropy  

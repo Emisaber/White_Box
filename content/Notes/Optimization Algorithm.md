@@ -1,3 +1,9 @@
+---
+tags:
+  - DL
+  - ML
+---
+
 # How to choose an Optimization Algorithm
 
 ## Optimization Algorithms
