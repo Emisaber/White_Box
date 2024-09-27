@@ -10,7 +10,7 @@ denoted $D_{KL}(P||Q)$，is a type of statistical distance.
 
 一种概率分布距离的定义  
 
-$$D_{KL}(P||D) = \sum_{x\in X}P(x)log(\frac{P(x)}{D(x)}) \tag{1}$$
+$$D_{KL}(P||D) = \sum_{x\in X}P(x)log(\frac{P(x)}{D(x)})$$
 - it is not symmetric
 - not satisfy triangle inequality
 - 不太算是一种距离
