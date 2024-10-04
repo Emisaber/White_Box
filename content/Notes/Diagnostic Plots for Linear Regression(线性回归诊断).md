@@ -1,3 +1,8 @@
+---
+tags:
+  - DL
+  - ML
+---
 ## Residuals vs Fitted
 
 **The plot shows if residuals have non-linear patterns**   

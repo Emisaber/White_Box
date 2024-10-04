@@ -16,4 +16,5 @@
 - [[ReLU(Rectified Linear Unit)]]
 - [[Saturating Non-linearities]]
 - [[sigmoid]]
+- [[Diagnostic Plots for Linear Regression(线性回归诊断)]]
 - ......
