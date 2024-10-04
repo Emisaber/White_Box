@@ -6,6 +6,8 @@ tags:
 
 cross-entropy is a measure from the field of information theory, generally calculating the difference between two probability distributions  
 
+Usually, cross-entropy is calculated using a log with e as the base, where there is only a multiple difference between a log with 2 as the base and a log with e as the base/unit  通常以e为底，至少tensorflow和pytorch都是  
+
 [[KL divergence(KL 散度)]] calculate the relative entropy between two probability distributions, while cross-entropy calculate the total entropy  
 
 ## Cross-Entropy
