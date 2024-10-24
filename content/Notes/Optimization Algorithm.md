@@ -165,9 +165,15 @@ Off-line learning: all $(x_t, \hat y_t)$ at every time step
 ![Pasted image 20240812081329](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240812081329.png)
 
 **Adagrad(RMS+learning rate schedule)(2011)**  
-$$\sigma_i^t = \sqrt{\frac{1}{t+1}\sum_{j=0}^t(g_i^j)^2}$$  
-$$\eta^t = \frac{\eta}{\sqrt{t+1}}$$  
-$$w^t = w^{t-1} - \frac{\eta}{\sqrt{\sum_{j=0}^{t+1}(g^j)^2}}g^{t-1}$$  
+$$
+\sigma_i^t = \sqrt{\frac{1}{t+1}\sum_{j=0}^t(g_i^j)^2}
+$$  
+$$
+\eta^t = \frac{\eta}{\sqrt{t+1}}
+$$  
+$$
+w^t = w^{t-1} - \frac{\eta}{\sqrt{\sum_{j=0}^{t+1}(g^j)^2}}g^{t-1}
+$$  
 ![Pasted image 20240812083720](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240812083720.png)  
 
 

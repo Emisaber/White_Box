@@ -10,26 +10,41 @@ tags:
 
 从样本中sample出一堆$X_i$，得到$X_i$的均值$\bar X$    
 在统计中，认为$\bar X$服从正态分布，即  
-$$\bar X\sim N(\mu_{\bar X}, \sigma_{\bar X}^2)$$  
+$$
+\bar X\sim N(\mu_{\bar X}, \sigma_{\bar X}^2)
+$$  
 为了知道当前的$\bar X$处于分布的哪个位置(即计算当前得到的样本均值$\bar X$的概率)，需要计算$\bar X$与均值之前差了多少个$\sigma$，即  
-$$\frac{\bar X-\mu_{\bar X}}{\sigma_{\bar X}}$$  
+$$
+\frac{\bar X-\mu_{\bar X}}{\sigma_{\bar X}}
+$$  
 
-但是实际上$\sigma_{\bar X}$难以获得，认为$$\sigma_{\bar X} = \frac{\sigma}{\sqrt{n}}$$   
+但是实际上$\sigma_{\bar X}$难以获得，认为  
+$$
+\sigma_{\bar X} = \frac{\sigma}{\sqrt{n}}
+$$   
 
 >由IID假设同样能得到上式，此处的$\sigma$是样本总体的标准差
 
 故与$\mu$的距离为  
-$$\frac{\bar X-\mu}{\frac{\sigma}{\sqrt{n}}}$$   
+$$
+\frac{\bar X-\mu}{\frac{\sigma}{\sqrt{n}}}
+$$   
 被称为**Z-statistic or Z-score**  
-$$Z = \frac{\bar X-\mu}{\frac{\sigma}{\sqrt{n}}}$$  
+$$
+Z = \frac{\bar X-\mu}{\frac{\sigma}{\sqrt{n}}}
+$$  
 但是，我们也不知道$\sigma$ 是多少，通过样本($X$)的标准差来近似，即原式改为  
-$$Z = \frac{\bar X-\mu}{\frac{S}{\sqrt{n}}}$$   
+$$
+Z = \frac{\bar X-\mu}{\frac{S}{\sqrt{n}}}
+$$   
 当样本数大于等于30时，这种近似是可行的   
 同时，当样本总数大于等于30时，Z可以被看成是正态分布   
 
 此时，如果样本数小于30，分布变为t分布   
 即**t-statistic**   
-$$t = \frac{\bar X-\mu}{\frac{S}{\sqrt{n}}}$$  
+$$
+t = \frac{\bar X-\mu}{\frac{S}{\sqrt{n}}}
+$$  
 
 无论是哪种分布/统计量，通过查表能够得到取得当前$\bar X$的概率   
 
@@ -44,7 +59,9 @@ $$t = \frac{\bar X-\mu}{\frac{S}{\sqrt{n}}}$$
 它与Z-score(Z分数)十分相似，当样本量较小，或者这总体标准差未知时，使用t统计量  
 
 公式为  
-$$t_{\hat \beta} = \frac{\hat \beta - \beta_0}{SE(\hat \beta)}$$   
+$$
+t_{\hat \beta} = \frac{\hat \beta - \beta_0}{SE(\hat \beta)}
+$$   
 
 其中，$\hat \beta$ 是估计量，$\beta_0$ 是假设值，$SE(\hat \beta)$ 是[[Standard Error 标准误差]]   
 
@@ -81,7 +98,9 @@ $$t_{\hat \beta} = \frac{\hat \beta - \beta_0}{SE(\hat \beta)}$$
 
 ### Degree of freedom
 
-$$df = \sum n_s - 1$$   
+$$
+df = \sum n_s - 1
+$$   
 t检验的自由度是样本数减一  
 
 
@@ -97,7 +116,9 @@ t检验的自由度是样本数减一
 >_A one-sample Student's t-test is a location test of whether the mean of a population has a value specified in a null hypothesis._
 
 是一种位置检验，检验总体均值是否具有原假设中指定的值。   
-$$t = \frac{\bar x - \mu_0}{s/\sqrt{n}}$$   
+$$
+t = \frac{\bar x - \mu_0}{s/\sqrt{n}}
+$$   
 - $\bar x$是样本均值
 - s是样本标准差
 - 此时自由度为n-1
@@ -113,7 +134,9 @@ $$t = \frac{\bar x - \mu_0}{s/\sqrt{n}}$$
 
 两组样本，独立且分布相同，比对两个总体的某一变量时使用
 
-$$t = \frac{(\bar x_1 - \bar x_2)}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}}$$  
+$$
+t = \frac{(\bar x_1 - \bar x_2)}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}}
+$$  
 
 ##### Paired samples
 
@@ -128,7 +151,9 @@ $$t = \frac{(\bar x_1 - \bar x_2)}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}}$$
 - 抽样是独立的
 - 相依赖的变量近似正态分布
 
-$$t = \frac{\bar d}{S_d/\sqrt{n}}$$   
+$$
+t = \frac{\bar d}{S_d/\sqrt{n}}
+$$   
 
 - $\bar d$ 是配对的样本的差异的均值
 - $S_d$是差异的标准差

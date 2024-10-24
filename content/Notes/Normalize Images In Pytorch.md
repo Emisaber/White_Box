@@ -14,7 +14,9 @@ After transform image to tensor, we may perform image normalization
 
 **Normalization**   
 
-$$\bar x = \frac{x-\mu}{\sigma}$$    
+$$
+\bar x = \frac{x-\mu}{\sigma}
+$$    
 
 - Normalizing the images means transforming the images into such values that the mean and standard deviation of the image become 0.0 and 1.0 respectively.   
 - It helps get data within a range and reduces the skewness(偏斜), which helps learn faster and better.  

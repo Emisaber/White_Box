@@ -21,15 +21,21 @@ tags:
 SEM  
 
 
-$$\sigma_{\bar X} = \frac{\sigma}{\sqrt{n}}$$  
+$$
+\sigma_{\bar X} = \frac{\sigma}{\sqrt{n}}
+$$  
 $\sigma$是总体的标准差，n是样本数量   
 
 >要缩小k倍误差，n(试验次数)需要增大到$k^2$倍
 
 通常总体的$\sigma$不可知，使用样本的方差代替  
 
-$$\sigma_{\bar X} \approx \frac{\sigma_X}{\sqrt{n}}$$  
+$$
+\sigma_{\bar X} \approx \frac{\sigma_X}{\sqrt{n}}
+$$  
 有可能样本的方差也不知道，可以使用样本方差的估计值  
 
-$$\sigma_{\bar X} \approx \frac{S_X}{\sqrt{n}}$$
+$$
+\sigma_{\bar X} \approx \frac{S_X}{\sqrt{n}}
+$$  
 

@@ -7,7 +7,9 @@ tags:
 **rectified linear activation funtion or ReLU**    ReLU通过正负区分输入  
 基本是默认的激活函数  
 
-$$ReLU = max(0,x)$$
+$$
+ReLU = max(0,x)
+$$
 谁大选谁  
 ![[Pasted image 20240623101848.png|425]]
 
@@ -20,7 +22,9 @@ $$ReLU = max(0,x)$$
 
 ### ReLU Activation
 
-$$ReLU = max(0, x)$$
+$$
+ReLU = max(0, x)
+$$
 avoid vanishing/exploding gradient issues(**its gradient is either 0 or 1**) but suffers from the dying ReLU problem  
 - **dying ReLU problem -- negative inputs lead to inactive neurons**
 	- **Cause**

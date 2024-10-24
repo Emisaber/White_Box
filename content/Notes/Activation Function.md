@@ -14,7 +14,9 @@ The complexity of activation function will increase the complexity of trainning
 ## Typical activation function
 #### Linear activation function
 The simplest activation function is linear function   
-$$\sigma  =  cx$$
+$$
+\sigma  =  cx
+$$
 it is easy to train but cannot learn complex mapping functions  
 
 >Linear activation functions are still used in the output layer for networks that predict a quantity  

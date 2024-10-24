@@ -5,13 +5,21 @@ tags:
 ---
 
 书接[[Classification]]  
-$$P_{w,b}(C|x) = \sigma(z)$$  
-$$z = \textbf{w·x}+b$$  
+$$
+P_{w,b}(C|x) = \sigma(z)
+$$  
+$$
+z = \textbf{w·x}+b
+$$  
 ![Pasted image 20240809221242](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240809221242.png)  
 
 ## Logistic regression 
-$$f_{w,b}(x) = \sigma(\textbf{wx}+b)$$  
-$$\sigma(x) = \frac{1}{1+e^{-x}}$$  
+$$
+f_{w,b}(x) = \sigma(\textbf{wx}+b)
+$$  
+$$
+\sigma(x) = \frac{1}{1+e^{-x}}
+$$  
 #### Compared to linear regression
 ##### model 
 - **function sets**

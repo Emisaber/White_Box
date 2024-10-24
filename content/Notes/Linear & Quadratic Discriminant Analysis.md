@@ -21,7 +21,9 @@ p_i= \sigma(X_i) = \frac{1}{1 + e^{-X_i\beta}}
 $$  
 为了达到1，$\beta$ 需要尽可能大  
 同时，逻辑斯谛的目标函数是最大化对数似然函数  
-$$J(\beta) = \sum_{i=1}^n[y_ilog(p_i) + (1-y_i)log(1-p_i)]$$  
+$$
+J(\beta) = \sum_{i=1}^n[y_ilog(p_i) + (1-y_i)log(1-p_i)]
+$$  
 对数似然函数对$\beta$ 没有限制，$\beta$ 越大，目标函数越大，无法收敛  
 
 ##### 计算量
@@ -31,17 +33,23 @@ $$J(\beta) = \sum_{i=1}^n[y_ilog(p_i) + (1-y_i)log(1-p_i)]$$
 ### LDA
 
 LDA 来自于 贝叶斯定理  
-$$P(Y=k|X=x) = \frac{P(X=x|Y=k)P(Y=k)}{P(X=x)}$$  
+$$
+P(Y=k|X=x) = \frac{P(X=x|Y=k)P(Y=k)}{P(X=x)}
+$$  
 已知先验概率$P(Y=k)$，以此求解后验概率 $P(Y=k|X=x)$   
 将贝叶斯公式改写为  
-$$P(Y=k|X=x) = \frac{\pi_kf_k(x)}{\sum_{l=1}^K\pi_lf_l(x)}$$  
+$$
+P(Y=k|X=x) = \frac{\pi_kf_k(x)}{\sum_{l=1}^K\pi_lf_l(x)}
+$$  
 - $\pi_k$ 表示 $P(Y = k)$ 即先验概率
 - $f_k(x)$ 表示 $P(X=x|Y=k)$，是第k类观测的X的密度函数
 
 #### 单个类别
 
 假设 $f_k(x)$ 是高斯分布，有(LDA适用于其他分布)   
-$$f_k(x) = \frac{1}{\sqrt{2\pi}\sigma_k}e^{-\frac{1}{2}(\frac{x-\mu_k}{\sigma_k})^2}$$  
+$$
+f_k(x) = \frac{1}{\sqrt{2\pi}\sigma_k}e^{-\frac{1}{2}(\frac{x-\mu_k}{\sigma_k})^2}
+$$  
 又假设每个类别的方差$\sigma_k$相等，记作$\sigma^2$   
 
 将$f_k(x)$代入可得  
@@ -54,11 +62,15 @@ $$
 - 约去之后，下面是一个常数(和固定不变)，分类结果($p_k(x)$) 取决于分子  
 
 即，贝叶斯分类器将观测分类到  
-$$\delta_k({x}) = x\frac{\mu_k}{\sigma^2} - \frac{\mu ^2}{2\sigma^2} + log(\pi_k)$$  
+$$
+\delta_k({x}) = x\frac{\mu_k}{\sigma^2} - \frac{\mu ^2}{2\sigma^2} + log(\pi_k)
+$$  
 可以看到，此时的$\delta$是线性的  
 
 假设K = 2, $\pi_1 = \pi_2 = 0.5$，则贝叶斯决策边界(概率相同的边界)(令两个$\delta$相等)  
-$$X = \frac{\mu_1 + \mu_2}{2}$$  
+$$
+X = \frac{\mu_1 + \mu_2}{2}
+$$  
 
 > 贝叶斯决策边界类别概率相等，产生最少的错误分类  
 
@@ -73,7 +85,9 @@ f ( x )=\frac{1} {( 2 \pi)^{p / 2} | \Sigma|^{\frac{1} {2}}} e^{-\frac{1} {2} ( 
 $$  
 
 由于假设的协方差矩阵相同，二次项同样被约去，得到判别函数   
-$$\delta_k(x) = x^T\Sigma^{-1}\mu_k - \frac{1}{2}\mu_k^T\Sigma^{-1}\mu_k + log(\pi_k)$$
+$$
+\delta_k(x) = x^T\Sigma^{-1}\mu_k - \frac{1}{2}\mu_k^T\Sigma^{-1}\mu_k + log(\pi_k)
+$$
 
 
 仍然线性   
@@ -85,7 +99,9 @@ Quadratic Discriminant Analysis
 假设每一类更观测的$f_k(x)$都服从一个多元高斯分布，且每一类观测都有自己的协方差矩阵。  
 
 由于协方差不再能约去，二次判别分析的决策边界不再是线性的   
-$$\delta_k(x) = -\frac{1}{2}(x - \mu_k)^T\Sigma_k^{-1}(x-\mu_k) + log\pi_k - \frac{1}{2}log|\Sigma_k|$$   
+$$
+\delta_k(x) = -\frac{1}{2}(x - \mu_k)^T\Sigma_k^{-1}(x-\mu_k) + log\pi_k - \frac{1}{2}log|\Sigma_k|
+$$   
 
 ### Beyond Course
 

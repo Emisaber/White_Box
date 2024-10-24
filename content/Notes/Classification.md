@@ -47,11 +47,19 @@ regression来做的话，隐含有数值大小的信息，输出是一个连续�
 
 每个类别
 
-$$Likelihood(\mu, \Sigma) = f_{\mu, \Sigma}(x^1) f_{\mu, \Sigma}(x^2) f_{\mu, \Sigma}(x^3)...$$  
-$$\mu^*, \Sigma^* = argmax_{\mu,\Sigma}Likelihood(\mu,\Sigma)$$  
+$$
+Likelihood(\mu, \Sigma) = f_{\mu, \Sigma}(x^1) f_{\mu, \Sigma}(x^2) f_{\mu, \Sigma}(x^3)...
+$$  
+$$
+\mu^*, \Sigma^* = argmax_{\mu,\Sigma}Likelihood(\mu,\Sigma)
+$$  
 微分得解  
-$$\mu^* = \frac{1}{N}\sum_{n=1}^Nx^n$$  
-$$\Sigma^*=\frac{1}{N}\sum_{n=1}^N(x^n-\mu^*)(x^n-\mu^*)^T$$  
+$$
+\mu^* = \frac{1}{N}\sum_{n=1}^Nx^n
+$$  
+$$
+\Sigma^*=\frac{1}{N}\sum_{n=1}^N(x^n-\mu^*)(x^n-\mu^*)^T
+$$  
 代入得到得$\mu$, $\Sigma$ 就可以得到对应的高斯分布，就做出来了。  
 
 每个类别都找到Maximum likelihood的Gasussian ditribution，得到参数就可以计算概率  
@@ -65,11 +73,19 @@ $\Sigma$跟input size平方成正比，如果每个都有独立的$\Sigma$ 的�
 $\Sigma$共享的话  
 
 两个类别的话  
-$$Likelihood(u^1,u^2,\Sigma) = f_{u^1,\Sigma}(x^1)f_{u^2,\Sigma}(x^2)f_{u^3,\Sigma}(x^3)...$$  
-$$\mu^i = \frac{1}{N^i}\sum_{n=1}^{N^i}x^n$$  
+$$
+Likelihood(u^1,u^2,\Sigma) = f_{u^1,\Sigma}(x^1)f_{u^2,\Sigma}(x^2)f_{u^3,\Sigma}(x^3)...
+$$  
+$$
+\mu^i = \frac{1}{N^i}\sum_{n=1}^{N^i}x^n
+$$  
 解得  
-$$\Sigma^*=\frac{1}{N}\sum_{n=1}^N(x^n-\mu^*)(x^n-\mu^*)^T$$  
-$$\Sigma=\frac{N_1}{M}\Sigma^1 + \frac{N_2}{M}\Sigma^2$$  
+$$
+\Sigma^*=\frac{1}{N}\sum_{n=1}^N(x^n-\mu^*)(x^n-\mu^*)^T
+$$  
+$$
+\Sigma=\frac{N_1}{M}\Sigma^1 + \frac{N_2}{M}\Sigma^2
+$$  
 
 共享的情况下，分类的boundary会变成直线，称linear model  
 ![Pasted image 20240809110205](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240809110205.png)  

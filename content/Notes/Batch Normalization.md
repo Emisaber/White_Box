@@ -48,10 +48,18 @@ Although **reducing “internal covariate shift”** was a motivation in the dev
 ### How to standardize  
 original standardization is implemented during training by calculating the mean and standard deviation of each input variable to a layer **per mini-batch**  
 
-$$\mu = \frac{1}{m}\sum_iz^{(i)}$$  
-$$\sigma^2 = \frac{1}{m}\sum_i(z^{(i)}-\mu)^2$$  
-$$z_{norm}^{(i)} = \frac{z^{(i)}-\mu}{\sqrt{\sigma^2+\varepsilon}}$$  
-$$\widetilde{z}^{(i)} = \gamma z_{norm}^{(i)}+\beta$$  
+$$
+\mu = \frac{1}{m}\sum_iz^{(i)}
+$$  
+$$
+\sigma^2 = \frac{1}{m}\sum_i(z^{(i)}-\mu)^2
+$$  
+$$
+z_{norm}^{(i)} = \frac{z^{(i)}-\mu}{\sqrt{\sigma^2+\varepsilon}}
+$$  
+$$
+\widetilde{z}^{(i)} = \gamma z_{norm}^{(i)}+\beta
+$$  
 - Why $\varepsilon$? 
 	- It is added for numerical stability and is an arbitrarily small constant. 
 - Why $\gamma$ and $\beta$ ?

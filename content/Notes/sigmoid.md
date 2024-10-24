@@ -4,9 +4,13 @@ tags:
   - ML
 ---
 
-$$sigmoid(x) = \frac{1}{1+e^{-x}}$$  
+$$
+sigmoid(x) = \frac{1}{1+e^{-x}}
+$$  
 or   
-$$sigmoid(x) = \frac{e^x}{e^x + 1}$$  
+$$
+sigmoid(x) = \frac{e^x}{e^x + 1}
+$$  
 - s-shaped -- 拟合折线和曲线
 - logistic function 逻辑函数  
 - 可以用于分类  -- 计算概率
@@ -19,7 +23,9 @@ $$sigmoid(x) = \frac{e^x}{e^x + 1}$$
 - 输出在01之间，用作概率
 
 传入一元线性函数  
-$$c\ sigmoid(b+wx) = c \frac{1}{1+e^{-(b+wx)}}$$
+$$
+c\ sigmoid(b+wx) = c \frac{1}{1+e^{-(b+wx)}}
+$$
 通过改变z的系数就能改变斜率，增加常数就能改变位置，中间实际上就是e的指数的形状，也就是一条直线  
 所以将需要拟合的直线段(折线的一部分或者曲线的一部分)放进来，就能表示出那一段折线/曲线  
 - **改变w，改变斜率**
@@ -27,14 +33,22 @@ $$c\ sigmoid(b+wx) = c \frac{1}{1+e^{-(b+wx)}}$$
 - **改变c，改变最值，0保持，最大值改变**
 
 多个sigmoid表示piece curve  
-$$y = b+\sum_ic_i\ sigmoid(b_i+w_ix_i)$$
+$$
+y = b+\sum_ic_i\ sigmoid(b_i+w_ix_i)
+$$
 
 传入多元线性   
-$$y = b + \sum_ic_i\ sigmoid(b_i+\sum_jw_{ij}x_j)$$  
+$$
+y = b + \sum_ic_i\ sigmoid(b_i+\sum_jw_{ij}x_j)
+$$  
 
 简写(向量化)  
-$$\textbf{r} = \textbf{b} + \textbf{w}\textbf{x}$$
-$$y = b + \textbf{c}^Tsigmoid(\textbf{b} + \textbf{w}\textbf{x})$$  
+$$
+\textbf{r} = \textbf{b} + \textbf{w}\textbf{x}
+$$
+$$
+y = b + \textbf{c}^Tsigmoid(\textbf{b} + \textbf{w}\textbf{x})
+$$  
 
 ## references
 - [A Gentle Introduction To Sigmoid Function](https://machinelearningmastery.com/a-gentle-introduction-to-sigmoid-function/)

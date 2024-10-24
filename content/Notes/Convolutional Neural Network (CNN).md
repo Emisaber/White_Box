@@ -13,7 +13,9 @@ tags:
 ![[Pasted image 20240816083711.png]]  
 
 1. 当成三维的tensor  
-$$(H, W, C)$$  
+$$
+(H, W, C)
+$$  
 - 高(H)，宽(W)，channel(C)  
 - 高与宽代表pixel，图片的大小，channel是RGB  
 - 每个数值是RGB的强度

@@ -17,7 +17,9 @@ A saturating non-linearity is a function that squeezes the input into a fixed(bo
 sigmoid is a saturating non-linearity  
 
 a function is non-saturating if   
-$$(|lim_{x\rightarrow-\infty}f(x)| = +\infty) \lor(|lim_{x\rightarrow+\infty}f(x)| = +\infty)$$  
+$$
+(|lim_{x\rightarrow-\infty}f(x)| = +\infty) \lor(|lim_{x\rightarrow+\infty}f(x)| = +\infty)
+$$  
 non-saturating only proposes that the function has to grow to infinity in one direction
 
 ### The problem
