@@ -16,7 +16,9 @@ tags:
 
 此时，要求对于正类有$p_i \approx 1$  ，对于负类有$p_i \approx 0$   
 因为概率$p_i$为  
-$$p_i= \sigma(X_i) = \frac{1}{1 + e^{-X_i\beta}}$$  
+$$
+p_i= \sigma(X_i) = \frac{1}{1 + e^{-X_i\beta}}
+$$  
 为了达到1，$\beta$ 需要尽可能大  
 同时，逻辑斯谛的目标函数是最大化对数似然函数  
 $$J(\beta) = \sum_{i=1}^n[y_ilog(p_i) + (1-y_i)log(1-p_i)]$$  
@@ -102,5 +104,5 @@ $$\delta_k(x) = -\frac{1}{2}(x - \mu_k)^T\Sigma_k^{-1}(x-\mu_k) + log\pi_k - \fr
 
 ## Reference
 - [Linear & Quadratic Discriminant Analysis · UC Business Analytics R Programming Guide](https://uc-r.github.io/discriminant_analysis)   
-- [ISLR](## From course)
+- [ISLR](https://www.statlearning.com/)
 
