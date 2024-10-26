@@ -17,7 +17,9 @@ Information quantifies the number of bits required to encode and transmit an eve
 **Lower probability events(surprising) have more information, higher probability events(unsurprising) have less information.**    
 
 information $h(x)$ for an event $x$ can be calculated as follows   
-$$h(x)=-log(P(x))$$  
+$$
+h(x)=-log(P(x))
+$$  
 ***Entropy* is the number of bits required to transmit a randomly selected event from a probability distribution.**  熵用于描述分布，是传输一个随机从概率分布中选取的事件需要的位数  
 
 A **skewed distribution(偏态分布) has a low enrtopy(less surprise)**, whereas a **distribution where events have equal probabilty(事件等概率) has a larger entropy**   
@@ -30,7 +32,9 @@ A **skewed distribution(偏态分布) has a low enrtopy(less surprise)**, wherea
 - Balanced Probability Distribution (surprising): High entropy.
 
 Entropy $H(x)$ can be calculated by(if discrete states)  
-$$H(x) = -\sum_xP(x)log(P(x))$$  
+$$
+H(x) = -\sum_xP(x)log(P(x))
+$$  
 **熵是信息的期望**  
 
 ***Cross-entropy* calculates the number of bits required to represent or transmit an event from one distribution compared to another distribution.(when use another distribution)**  
@@ -39,10 +43,14 @@ $$H(x) = -\sum_xP(x)log(P(x))$$
 >_… the cross entropy is the average number of bits needed to encode data coming from a source with distribution p when we use model q …_     ---- Machine Learning: A Probabilistic Perspective
 
 Cross-entropy between two probability distributions, such as Q from P, can be stated as   
-$$H(P,Q)$$  
+$$
+H(P,Q)
+$$  
 
 Cross-entropy $H(P,Q)$ can be calculated as  
-$$H(P,Q) = -\sum_xP(x)*log(Q(x))$$  
+$$
+H(P,Q) = -\sum_xP(x)*log(Q(x))
+$$  
 the result will be **positive**, meaning **the bits required when use $Q$ to represent event in $P$**   
 
 if the distribution is the same,(two probability distributions are identical), the result is the entropy   
@@ -57,7 +65,9 @@ Cross-Entropy measures the total number of bits needed to represent message with
 交叉熵是使用另一个分布描述时需要的所有位数，而KL散度是额外的位数  
 
 KL Divergence can be calculated by  
-$$KL(P||Q) = -\sum_x P(x)log\frac{Q(x)}{P(x)}$$  
+$$
+KL(P||Q) = -\sum_x P(x)log\frac{Q(x)}{P(x)}
+$$  
 > _In other words, the KL divergence is the average number of extra bits needed to encode the data, due to the fact that we used distribution q to encode the data instead of the true distribution p._   
 >  ----- Machine Learning: A Probabilistic Perspective
 
@@ -67,12 +77,18 @@ KL-divergence is often referred to as the **"relative entropy"**
 - **Relative Entropy (KL Divergence): Average number of extra bits to represent an event from Q instead of P.**
 
 Cross-entropy can be calculated by KL-divergence  
-$$H(P, Q) = H(P) + KL(P||Q)$$  
+$$
+H(P, Q) = H(P) + KL(P||Q)
+$$  
 the same to KL-divergence  
 
-$$KL(P||Q) = H(P,Q) - H(P)$$  
+$$
+KL(P||Q) = H(P,Q) - H(P)
+$$  
 KL-dibergence and Cross-entropy is not symmetrical  
-$$H(P,Q) \ !=H(Q,P)$$  
+$$
+H(P,Q) \ !=H(Q,P)
+$$  
 
 ## How to Calculate Cross-Entropy
 
@@ -120,7 +136,9 @@ the target probability distribution for an input as the class label 0 or 1 inter
 
 With C represents the class set, the cross-entropy can be calculated by   
 
-$$H(P,Q) = -\sum_i^{|C|}P(C_i)log(Q(C_i))$$
+$$
+H(P,Q) = -\sum_i^{|C|}P(C_i)log(Q(C_i))
+$$
 
 
 the base-e or natrual logarithm is used for classification tasks, this means units are in nats  
