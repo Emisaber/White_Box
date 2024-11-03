@@ -266,6 +266,7 @@ What PLS is doing is calculating all the different ingredients (e.g. $\bf w_i, z
 
 ### PCA
 - [Deep Learning - Foundations and Concepts](https://www.bishopbook.com/)
+- [Principal Component Analysis (PCA) Explained | Built In](https://builtin.com/data-science/step-step-explanation-principal-component-analysis)
 ### PLSR
 - [16 Partial Least Squares Regression | All Models Are Wrong: Concepts of Statistical Learning](https://allmodelsarewrong.github.io/pls.html)
 - [Partial least squares regression - Wikipedia](https://en.wikipedia.org/wiki/Partial_least_squares_regression)
