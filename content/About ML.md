@@ -17,4 +17,5 @@
 - [[Saturating Non-linearities]]
 - [[sigmoid]]
 - [[Diagnostic Plots for Linear Regression(线性回归诊断)]]
+- [[Generative Adversarial Network(GAN)]]
 - ......
