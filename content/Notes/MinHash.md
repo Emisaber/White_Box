@@ -22,8 +22,8 @@ $$
 $$
 
 
-> The similarity here is the estimation of Jaccard similarity, which defined as  
->   $$
+The similarity here is the estimation of Jaccard similarity, which defined as  
+$$
 \operatorname{J a c c a r d} ( A, B )={\frac{| A \cap B |} {| A \cup B |}} 
 $$
 
