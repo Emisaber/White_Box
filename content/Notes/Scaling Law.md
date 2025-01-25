@@ -51,7 +51,7 @@ Two conclusion were drawn:
 	- the scale refers to parameters(N), dataset(D), Computational resources(C)
 - There is **power-law relationship** between the performance of the model and each of the **scaling factors**(when they are not constrained by one another)
 
-![[Pasted image 20250116110849.png]][^1]   
+![Pasted image 20250116110849](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250116110849.png)[^1]   
 
 The power law trend is illustrrated by the first 4 equation   
 When we scaling up one of these factors, we can expect a corresponding and predictable improvement in the model's performance, following a power-law trend  
@@ -60,16 +60,16 @@ When we scaling up one of these factors, we can expect a corresponding and predi
 #### Sample-Efficient LLMs
 
 Experiments found that, given tokens processed, larger models achieve lower loss than small models(Larger model is more sample-efficient)  大模型对样本的学习能力更强   
-![[Pasted image 20250116113751.png]][^1]   
+![Pasted image 20250116113751](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250116113751.png)[^1]   
 
 But in Google's paper, the model size should be scale too(we can achieve the same performance using less parameter)    
-![[Pasted image 20250116114232.png]][^2]   
-![[Pasted image 20250116114236.png]][^2]   
+![Pasted image 20250116114232](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250116114232.png)[^2]   
+![Pasted image 20250116114236](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250116114236.png)[^2]   
 
 > 谷歌实验的模型规模远大于OpenAI，可能OpenAI的规模不够大导致结论不同
 
 
-![[Pasted image 20250116115240.png]][^2]  
+![Pasted image 20250116115240](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250116115240.png)[^2]  
 
 Google's paper offers a new way of interpretation of LLMs scaling law.   
 Ploting out IsoLoss contours, we can find the fewest FLOPs in each curve. These points give us the efficient frontier(blue line)    
