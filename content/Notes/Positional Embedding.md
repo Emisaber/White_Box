@@ -76,7 +76,7 @@ $$
 g ( q, k, m-n )=R_{g} ( q, k, m-n ) e^{i \Theta_{g} ( q, k, m-n )} 
 $$
 
-$\Theta(q)$ 是幅角，$R_g$$\Theta_g$在满足等式的情况下可以任意选择        
+$\Theta(q)$ 是幅角，$R_g~\Theta_g$在满足等式的情况下可以任意选择        
 
 >[!addition]
 >#### 关于复数的指数形式
