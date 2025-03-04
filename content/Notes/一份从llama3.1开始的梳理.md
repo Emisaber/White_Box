@@ -43,7 +43,7 @@ tags:
 	- RS
 	- PPO, DPO
 	- RLHF
-- Infe1rence
+- Inference
 	- Parallelism
 	- Quantization
 
@@ -180,7 +180,7 @@ Llama 3在预训练的最后40Mtoken采取了将LR(learning rate)线性退火到
 
 #### KV Cache
 
-[[KV Cache]]     
+[[KV cache]]     
 
 在推理过程，计算next token时，L个Transformer block的中间结果需要被重复利用    
 将Key, Value缓存起来加速推理     
