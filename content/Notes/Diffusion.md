@@ -4,7 +4,6 @@ tags:
   - LLM
   - Diffusion
 ---
-
 ## What are Diffusion Models
 
 >_GAN models are known for potentially unstable training and less diversity in generation due to their adversarial training nature. VAE relies on a surrogate loss. Flow models have to use specialized architectures to construct reversible transform._  
@@ -24,7 +23,7 @@ tags:
 扩散模型定义了一个不断增加随机噪声的马尔可夫链，模型学习如何reverse the diffusion process来从噪声中构造想要的数据   
 扩散模型的训练过程是固定的，在高维的空间(与原数据一致)中训练(而没降维)   
 
-![[Pasted image 20250316151605.png]]  
+![Pasted image 20250316151605](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250316151605.png)  
 
 #### Forward diffusion process 前向过程
 
@@ -42,7 +41,7 @@ $$
 - 第二个式子即时马尔可夫链的基本形式
 
 这样的定义我们可以sample任意时刻的 $x$  (**reparameterization trick**)   
-![[Pasted image 20250316160132.png]]   
+![Pasted image 20250316160132](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250316160132.png)   
 其中  $\alpha_{t}=1-\beta_{t} \; \mathrm{a n d} \; \bar{\alpha}_{t}=\prod_{i=1}^{t} \alpha_{i}$   
 $\beta_i$ 逐渐增大，$\bar \alpha$ 逐渐减小  
 
@@ -97,7 +96,7 @@ $$
 有如下数学推导  
 
 根据Bayes' rule 有   
-![[Pasted image 20250316185807.png]]   
+![Pasted image 20250316185807](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250316185807.png)   
 
 
 > [!notes]
@@ -158,7 +157,7 @@ $$
 
 我们得到VLB，然后将VLB的各项推导成tacklable的形式  
 有   
-![[Pasted image 20250404094519.png]]   
+![Pasted image 20250404094519](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250404094519.png)   
 
 为了简单描述，将各项重写为  
 
@@ -202,10 +201,10 @@ $$
 
 
 也就是训练伪代码中   
-![[Pasted image 20250404105249.png]]   
+![Pasted image 20250404105249](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250404105249.png)   
 
 生成部分的伪代码也可以理解为构造了 $x_{t-1}$ 的分布   
-![[Pasted image 20250404105348.png]]  
+![Pasted image 20250404105348](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250404105348.png)  
 
 #### Connection with noise-conditioned score networks(NCSN)
 
@@ -244,7 +243,7 @@ $$
 $$
 s 是防止t = 0时过小的offset    
 
-![[Pasted image 20250405102639.png]]    
+![Pasted image 20250405102639](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250405102639.png)    
 
 具体的schedule函数的选择是任意的，只要满足两端缓慢变化和中间接近线性就可以   
 
@@ -304,10 +303,10 @@ $$
 得到 ablated diffusion model(ADM) 和有指导的 ADM-G   
 
 DDPM sample 过程  
-![[Pasted image 20250405114316.png]]   
+![Pasted image 20250405114316](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250405114316.png)   
 
 DDIM 过程  
-![[Pasted image 20250405114327.png]]
+![Pasted image 20250405114327](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250405114327.png)
 
 
 ### Classifier Free Guidance(CFDM)
@@ -372,7 +371,7 @@ $$
 由于这样的确定性/非马尔可夫，我们没有必要一步步采样，可以通过跳步来加速图像生成。  
 
 实际效果参考如下(FID score)  
-![[Pasted image 20250407102047.png]]  
+![Pasted image 20250407102047](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250407102047.png)  
 
 在实际上生成中，每一次生成经过两个步骤  
 - 依据当前的 $x_t$ 估计 $x_0$ 
@@ -398,10 +397,10 @@ DDIM实际上不完全是一种模型，DDIM重新参数化了反向过程(转�
 ### Progressive Distillation
 
 通过蒸馏训练好的 deterministic sampler(DDIM)，训练 student DDIM，使得 studet DDIM的每一步都等效于 teacher DDIM 的两步  
-![[Pasted image 20250407110106.png]]   
+![Pasted image 20250407110106](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250407110106.png)   
 
 具体算法为  
-![[Pasted image 20250407110125.png]]  
+![Pasted image 20250407110125](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250407110125.png)  
 
 ### Consistency Models
 
@@ -424,12 +423,12 @@ LDM的做法有两个阶段
 
 diffusion process作用于latent vector $z$。这部分的架构是一个time-conditioned U-Net，加上一个cross-attention来获取conditioning information(class, semantic maps...)。每一种类型的conditioning information都有一个对应的 demain-specific encoder $\tau_\theta$ 对应进行编码   
 
-![[Pasted image 20250407153258.png]]  
+![Pasted image 20250407153258](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250407153258.png)  
 
 ### Scale up Generation Resolution and Quality
 
 为了生成高像素的图像，一种方法是使用[多个diffusion 构建pipeline](https://arxiv.org/abs/2106.15282)    
-![[Pasted image 20250407154805.png]]
+![Pasted image 20250407154805](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250407154805.png)
 
 在训练过程中加入 noise conditioning augmentation对最终图像的质量至关重要。设输入图像为 $z$，输出图像为 $x$ ，我们需要对 $z$ 进行strong data augmentation再作为下一个diffusion的输入，即$p(x|z)$     
 >conditioning noise 减少了compounding error   
@@ -452,7 +451,7 @@ $$
 $$
 这样就与 conditional generation 等价  
 
-![[Pasted image 20250407164214.png]]  
+![Pasted image 20250407164214](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250407164214.png)  
 
 给定一个文本 $y$，CLIP 先生成 text embedding $c^t(y)$，一个diffusion/autoregresssive prior $P(c^i|y)$ 处理这个 CLIP text embedding 得到 image embedding，然后通过一个 diffusion decoder $P(x|c^i, [y])$ 生成图像。  
 这样做有几个好处  
@@ -461,14 +460,14 @@ $$
 
 相比于CLIP，[Imagen](https://arxiv.org/abs/2205.11487) 使用预训练语言模型(frozen-T5-XXL text encoder)来编码文本输入。谷歌的实验指出，更大的语言模型能够有更好的图像生成效果和图像与文本的对齐能力   
 
-![[Pasted image 20240709164422.png]]  
+![Pasted image 20240709164422](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020240709164422.png)  
 
 论文发现，当使用classifier-free guidance的时候，增大 $w$ 会导致生成结果更满足文本但是图片效果更差(worse image fidelity)。论文指出这是因为 train-test mismatch。训练时数据 $x$ 在 $(-1,1)$ 之间，但是($w$增大时)测试时生成的图像并非如此。所以论文提出两种thresholding策略  
 - Static thresholding：clip x 到 $(-1,1)$ 之间
 - Dynamic thresholding：选取一个百分位数的pixel value $s$，如果这个数大于$1$，进行裁剪$(-s,s)$并除以 $s$   
 
 然后就是谷歌常用大规模实验和调参  
-![[Pasted image 20250407171746.png]]   
+![Pasted image 20250407171746](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250407171746.png)   
 
 ## Model Architecture
 
@@ -482,11 +481,11 @@ Downsampling stack and an upsampling stack
 - Upsampling: up convolution $2\times 2$，加上内部 $3\times 3$ 的ReLU。每一步channels数量减半
 - shortcuts: 对应层(down 和 up)间有跳连，为 upsampling process提供high-resolution features
 
-![[Pasted image 20250408151647.png]]    
+![Pasted image 20250408151647](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250408151647.png)    
 
 另外的，作为U-net的一个补充  
 为了能够为图像生成加上额外的条件，[ControlNet](https://arxiv.org/abs/2302.05543)  复制了U-net作为旁路处理额外条件 $c$  
-![[Pasted image 20250408152249.png]]  
+![Pasted image 20250408152249](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250408152249.png)  
 ControlNet 做法如下  
 1. 冻结原参数 $\theta$
 2. 克隆原参数 $\theta_c$ 到旁路
@@ -512,12 +511,12 @@ DiT是以ViT(Vision Transformer)为基础的模型，谈DiT之前得先谈谈ViT
 ViT与上述基本一致，有一系列Transformer+vision的优缺点，其简单实用，成为Transformer用于视觉的代表作   
 
 ViT将图片分为多个patch($16\times 16$)，再将patch投影为固定长度的向量送入Transformer，用与Transformer一样的encoder进行操作。在对图像分类任务中，输入序列尾部会有一个特殊token，对应的输出为最后的类别预测  
-![[Pasted image 20250408161505.png]]   
+![Pasted image 20250408161505](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250408161505.png)   
 
 
 主要的操作在于 patch embedding  
 设定patch大小 $p$，将输入 $I\times I \times C$ 拆分为 $\frac{I\times I}{p\times p}$ 个patch，一个patch是一个输入token。然后加上特殊token cls 加入到 transformer 的encoder中(positional embedding, attention, layer norm, MLP)。  
-![[Pasted image 20250408162401.png]]    
+![Pasted image 20250408162401](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250408162401.png)    
 
 可以不加入特殊token，使用所有token输出的token取平均(average pooling)  
 
@@ -527,7 +526,7 @@ ViT将图片分为多个patch($16\times 16$)，再将patch投影为固定长度�
 
 
 DiT 不同的是，它是LDM based 的ViT，处理图像的空间是 latent space   
-![[Pasted image 20250408183942.png]]   
+![Pasted image 20250408183942](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250408183942.png)   
 DiT将图像的latent representation和condition，timestep的embedding作为输入，探讨了三种形式   
 - In-Context conditioning
 	- 将condition和timestep直接作为图像token的一部分进行处理，带来的GFLOPs变化很少
