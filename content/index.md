@@ -5,6 +5,9 @@ title: White Box
 
 ##### _"A White Box that showed to public"_    
 
+_Welcome to my blog._  
+_This is the White Box where I share my notes and thoughts on deep learning and philosophia._
+
 ##### _There are_
 
 ***"Notes while reading: absence of my own thoughts."***    
