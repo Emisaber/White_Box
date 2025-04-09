@@ -1,8 +1,8 @@
 ---
 tags:
+  - ML
   - DL
   - LLM
-  - Diffusion
 ---
 ## What are Diffusion Models
 
