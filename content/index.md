@@ -8,7 +8,7 @@ title: White Box
 _Welcome to my blog._  
 _This is the White Box where I share my notes and thoughts on deep learning and philosophia._
 
-##### _The White Box includes_
+##### _The White Box contains_  
 
 - ***"Notes while reading: absence of my own thoughts."***    
 
