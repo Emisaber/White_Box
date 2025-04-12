@@ -8,18 +8,11 @@ title: White Box
 _Welcome to my blog._  
 _This is the White Box where I share my notes and thoughts on deep learning and philosophia._
 
-##### _There are_
+##### _The White Box includes_
 
-***"Notes while reading: absence of my own thoughts."***    
-- _[[About ML]]_
-- _[[About Math]]_
-- _[[About Tools]]_
+- ***"Notes while reading: absence of my own thoughts."***    
 
-***"My own thoughts: absense of deep thinking."***   
-- _[[Philosophia]]_
+- ***"My own thoughts: absense of deep thinking."***   
 
-***"Boring life: a struggle for freedom."***   
-- _[[Anime]]_
-- _[[Movies]]_
-- _[[Coffee]]_
-- _[[Cooking]]_
+- ***"Boring life: a struggle for freedom."***   
+
