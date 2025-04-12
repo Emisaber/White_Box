@@ -4,6 +4,7 @@ tags:
   - LLM
   - Diffusion
 ---
+
 ## Stable Diffusion
 
 ### Diffusion Model Review
@@ -38,7 +39,7 @@ $$
 log\ p(x) = log \int p(x, z)dz
 $$  
 >[!note]
->由于我是傻逼所以我得补充一下  
+>~~由于我是废物所以我得补充一下~~    
 >$\int p(x,z)dz$ 实际上是全概率公式的连续形式，也就是  
 >$$
 >\int p(x, z)dz = \int p(z)p(x|z)dz
@@ -156,3 +157,62 @@ $$
 其中 $c$ 是新设计的prompt输入，$c_{pr}$ 是去调特殊标识符的prompt，第一部分学习特定物体的生成，第二部分维持原能力，通过简单的加权和权衡   
 
 ![Pasted image 20250409113824](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250409113824.png)   
+
+## History
+
+#### Stable Diffusion
+
+Stabel Diffusion 的演变更多是 sacling up的过程，随着text encoder和U-Net 参数量和训练数据的增大，模型能力逐渐增强  
+
+从细节上看的话  
+- Stable Diffusion v1 系列
+	- 从SD 1.1 开始，没有1.0，Latent Diffusion 的原创性存在争议
+	- 使用预训练的CLIP模型
+	- 从第一代开始没有太多的变化，在前面的基础上微调
+	- SD 1.5 为代表作，生态丰富
+- Stable Diffusion 2 系列
+	- 2.0 相比 1系列scale up,2.2对2.1 fine-tune
+	- 分辨率上升 (768x768)
+	- 重新训练了更大的 CLIP，支持图像放大，引入了depth2img(输入图像提取灰度图(相当于基本构图)，进行图生图)
+	- 并不受社区欢迎，效果一般但是规模大
+- Stable Diffusion XL
+	- SD XL，1024x1024，支持LoRA，ControlNet
+	- 再次 scale up
+	- SD XL 分为 Base 和 refiner 两部分，由Base 生成最终图像的 latent representation 然后由 refiner 进行调整，但是实际不见得加上refiner效果更好
+	- 加入了 图片的大小和位置编码(傅里叶编码，加到time embedding上)
+	- 多宽高比训练策略，按不同宽高比分桶，提高泛化性
+	- 重新训练了VAE解码器
+- Stable Diffusion 3
+	- 引入DiT，text encoder为T5+CLIP
+
+
+#### DALL-E & Imagen
+
+- DALL-E2
+	- CLIP得到 text embedding，Diffusion得到image embedding，然后decoder生成图像 (unCLIP)
+- DALL-E3
+	- GPT集成，Image captioner生成图像描述(实验发现长描述更好)，使用Transformer架构模型作为text encoder
+	- 没有太多创新，主要是 caption 的生成
+
+- Imagen 
+	- Imagen 2 是 T5 作为text encoder，通过diffusion生成图像，通过super-resolution pipeline放大图像
+		- Imagen 2是pixel space
+	- Imagen 3虽然放出来了，但是好像没有模型细节的技术报告
+
+## References
+
+- [An Introduction to Diffusion Models and Stable Diffusion - Marvik](https://blog.marvik.ai/2023/11/28/an-introduction-to-diffusion-models-and-stable-diffusion/)
+- [【论文阅读】定制化diffusion微调: DreamBooth原理](https://zhuanlan.zhihu.com/p/646409276)
+- [DALL-E 3技术报告阅读笔记](https://zhuanlan.zhihu.com/p/662745543)
+- [【论文笔记】Imagen: Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding](https://zhuanlan.zhihu.com/p/519427256)
+
+
+
+
+
+
+
+
+
+
+
