@@ -1,9 +1,10 @@
 ---
 tags:
-  - ML
   - DL
   - LLM
+  - Diffusion
 ---
+
 ## What are Diffusion Models
 
 >_GAN models are known for potentially unstable training and less diversity in generation due to their adversarial training nature. VAE relies on a surrogate loss. Flow models have to use specialized architectures to construct reversible transform._  
@@ -65,7 +66,7 @@ $$
 >[!note]  
 >###### 为什么出现了这个？   
 >朗之万动力学是一种从复杂分布中采样的方法，通过确定性(梯度)和随机性(噪声)，x 逐渐趋近于目标分布 $p(x)$  
->Diffusion的反向过程可以看成是一种相近的形式(随机微分方程SDE角度)  
+>Diffusion的反向过程可以看成是一种相近的形式(NCSN角度)  
 >这一角度，Diffusion 可以被描述为一种 score-based 模型
 
 
@@ -172,7 +173,7 @@ $L_t$ 所有项都是两个分布的KL 散度，其中 $q(x_t|x_{t+1}, x_0)$ 是
 $$
 q ( {\bf x}_{t-1} | {\bf x}_{t}, {\bf x}_{0} )={\cal N} ( {\bf x}_{t-1} ; \frac{1} {\sqrt{\alpha_{t}}} \left(x_t - \frac{1-a_t} {\sqrt{1-\bar{\alpha}_{t}}} \epsilon_{t} \right), \tilde{\beta}_{t} {\bf I} ) 
 $$  
-对于 $p_\theta(x_t|x_{t+1})$ 有分布  
+对于 $p_\theta(x_t|x_{t+1})$ 有分布   
  $$
 {\bf x}_{t-1}={\cal N} ( {\bf x}_{t-1} ; \frac{1} {\sqrt{\alpha_{t}}} \Big( {\bf x}_{t}-\frac{1-\alpha_{t}} {\sqrt{1-\bar{\alpha}_{t}}} \epsilon_{\theta} ( {\bf x}_{t}, t ) \Big), \Sigma_{\theta} ( {\bf x}_{t}, t ) )
 $$  
@@ -200,8 +201,11 @@ L_{simple} = L_t^{simple} + C
 $$
 
 
-也就是训练伪代码中   
-![Pasted image 20250404105249](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250404105249.png)   
+也就是训练伪代码中    
+![Pasted image 20250404105249](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250404105249.png)     
+
+>这里实际上应该注意到，我们原本应该计算所有$t$来构成目标函数，但是我们没有求所有 t 的KL 散度作为损失，而是一个 $L_t$  
+>训练过程可以被理解为，使用蒙特卡洛来估计 原目标函数的期望
 
 生成部分的伪代码也可以理解为构造了 $x_{t-1}$ 的分布   
 ![Pasted image 20250404105348](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250404105348.png)  
@@ -361,13 +365,13 @@ $$
 $$
 q_\sigma(\mathbf{x}_{t-1} | \mathbf{x}_t, \mathbf{x}_0) = \mathcal{N}\left( \mathbf{x}_{t-1}; \sqrt{\bar{\alpha}_{t-1}} \left( \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha}_t} \boldsymbol{\epsilon}_{\theta}^{(t)}(\mathbf{x}_t)}{\sqrt{\bar{\alpha}_t}} \right) + \sqrt{1 - \bar{\alpha}_{t-1}} \sigma_t^2 \boldsymbol{\epsilon}_{\theta}^{(t)}(\mathbf{x}_t), \sigma_t^2 \mathbf{I} \right)
 $$
-从式子上看，$\sigma$ 是无所谓大小的，在DDPM的分布中  
+从式子上看，$\sigma$ 是无所谓大小的，在DDPM的分布中    
 
 $$
 \tilde{\beta}_t = \sigma_t^2 = \frac{1 - \bar{\alpha}_{t-1}}{1 - \bar{\alpha}_t} \cdot \beta_t
 $$
-我们引入一个 $\eta$ ，设 $\sigma = \eta \tilde \beta$，则当 $\eta = 1$ 时，为DDPM，是一个马尔可夫链过程，此时每一个 $t-1$ 状态依赖于上一个时间步的采样。  
-而如果 $\eta = 0$，分布的随机性消失，我们得到一个非马尔可夫链过程。这个过程是确定性的(没有方差)，即给定一个初始的高斯噪声，依据公式最终得到的图像是一致的，这样的方法为DDIM   
+我们引入一个 $\eta$ ，设 $\sigma^2 = \eta \tilde \beta$，则当 $\eta = 1$ 时，为DDPM，是一个马尔可夫链过程，此时每一个 $t-1$ 状态依赖于上一个时间步的采样。  
+而如果 $\eta = 0$，分布的随机性消失，我们得到一个非马尔可夫链过程(一个确定性函数)。这个过程是确定性的(没有方差)，即给定一个初始的高斯噪声，依据公式最终得到的图像是一致的，这样的方法为DDIM   
 由于这样的确定性/非马尔可夫，我们没有必要一步步采样，可以通过跳步来加速图像生成。  
 
 实际效果参考如下(FID score)  
@@ -394,6 +398,36 @@ $$
 
 DDIM实际上不完全是一种模型，DDIM重新参数化了反向过程(转化为非马尔可夫过程)，可以被理解为广义的扩散模型框架。DDIM的采样方法适用了DDPM方法训练的模型，用于加速采样。    
 
+DDPM，NCSN可以被统一在 SDE(随机微分方程)框架中，而DDIM实际上将SDE转化为了ODE(常微分方程)，这个ODE的求解本身是要求多步的。  
+更详细的参见 👈 **待补**   
+- [如何理解扩散模型中的SDE？](https://www.zhihu.com/question/616179189?write)
+- [生成扩散模型漫谈（五）：一般框架之SDE篇 - 科学空间\|Scientific Spaces](https://spaces.ac.cn/archives/9209)
+- [\[2011.13456\] Score-Based Generative Modeling through Stochastic Differential Equations](https://arxiv.org/abs/2011.13456)   
+
+#### SDE 框架
+
+DDPM 和 NCSN 都是离散角度的描述，如果使用SDE(Stochastic Differenctial Equations)连续化地统一描述的话   
+扩散模型的前向过程为  
+$$
+d {\boldsymbol{x}}={\boldsymbol{f}}_{t} ( {\boldsymbol{x}} ) d t+g_{t} d {\boldsymbol{w}} 
+$$   
+前面$f(x)$是偏移项，后面 $g_t$ 是扩散系数，$dw$ 是标准布朗运动  
+将式子理解为离散情况下的极限，即 $d x=\operatorname* {l i m}_{\Delta t \to0} \left( x_{t+\Delta t}-x_{t} \right)$ 可以进一步得到  
+$$
+\boldsymbol{x}_{t+\Delta t}=\boldsymbol{x}_{t}+\underbrace{\boldsymbol{f}_{t} ( \boldsymbol{x}_{t} ) \Delta t}_{\mathrm{确定部分}}+\underbrace{g_{t} \sqrt{\Delta t} \varepsilon}_{\mathrm{随机部分}}, \quad\varepsilon\sim\mathrm{{\mathcal{N}}} ( \mathbf{0}, \mathbf{I} ) 
+$$
+这个前向SDE对应一个逆向SDE，可以[由概率的引入推导出](https://arxiv.org/abs/2011.13456)， 形式为  
+$$
+d {\boldsymbol{x}}=\left[ f_{t} ( {\boldsymbol{x}} )-g_{t}^{2} \nabla_{\boldsymbol{x}} \operatorname{l o g} p_{t} ( {\boldsymbol{x}} ) \right] d t+g_{t} d {\boldsymbol{w}} 
+$$
+
+这一形式接近于朗之万采样，也接近于DDIM中的Diffusion扩展(这个要早于DDIM)。  
+基于此，我们可以将 DDPM 和 NCSN 都纳入这个框架，区别只在于 $f, g$ 的不同，其中DDPM为VP SDE (Variance Preserving)，NCSN为VE SDE(Variance Exploding)，方差紧缩和爆炸[源于主导的元素不同](https://www.zhihu.com/question/616179189?write)。  
+我们将式子中的梯度称为 score function，目标是训练模型逼近这个function。  
+
+还有一种角度是，去掉随机部分，得到一个确定性的逆向过程，称 概率流常微分方程(PF-ODE)   
+采样时可以使用任意 ODE Solver 求解，通常在 $t=\epsilon$ 时停止，将$x_\epsilon$ 作为近似值接受    
+ 
 ### Progressive Distillation
 
 通过蒸馏训练好的 deterministic sampler(DDIM)，训练 student DDIM，使得 studet DDIM的每一步都等效于 teacher DDIM 的两步  
@@ -404,7 +438,82 @@ DDIM实际上不完全是一种模型，DDIM重新参数化了反向过程(转�
 
 ### Consistency Models
 
-又是一个新模型，再说   
+尝试学习一个 **给定noisy data point $x_t, t > 0$，直接映射到原图 $x_0$**  的模型，称为 [consistency model](https://arxiv.org/abs/2303.01469)   
+在同一个diffusion sampling trajectory的过程都映射回同一张图(origin)，称为 self-consistency property   
+
+形式化描述的话，给定一个trajectory，$\left \{ x_t|t\in [\epsilon, T]\right\}$ ，consistency function $f$ 定义为 $f:(x_t, t) \rightarrow x_\epsilon$ (接受任意时刻的noisy data point，映射到原图)。任意时刻的函数值都相等 $f(x, t) = f(x_t', t') = x_\epsilon$ ，特别的，当 $t = \epsilon$ 时，$f$ 是一个identify function  
+模型学习这个函数，可以被描述为   
+
+$$
+f_{\theta} ( \mathbf{x}, t )=c_{\mathrm{s k i p}} ( t ) \mathbf{x}+c_{\mathrm{o u t}} ( t ) F_{\theta} ( \mathbf{x}, t ) 
+$$
+其中 $c_{\mathrm{skip}}$ 和 $c_{\mathrm{out}}$ 在 $t = \epsilon$ 时分别为 1，0，使得式子可微且满足上述条件  
+
+模型可以一次性生成原图，但是多步生成质量更高    
+
+#### 这和DDPM的区别是什么？
+
+DDPM 并不存在一致性的约束   
+DDPM在训练之后能得知的只有当前图像上的纯噪声是什么，而无法得知真实世界中当前图像和原图的关系。DDPM每一步都在马尔可夫链过程下进行，逆向的下一步取决于上一步的结果(我们只建模了这个过程)。    
+所以DDPM只能一步步生成。
+
+DDIM改变了这一建模($\eta = 0$)，逆向过程变成一个确定性函数，是离散化 概率流常微分方程。但是本质仍然是 逆向生成过程，生成过程依赖于 score function，score function的估计仍然是local 的(没有一致性约束)，所以逐步生成效果更佳   
+
+而CM通过引入一致性约束缓解了这一点，理论可以一步生成   
+
+#### 训练
+
+论文提供了两种训练方法，分别是蒸馏和从头训练     
+
+##### Consistency Distillation (CD)
+蒸馏方法    
+
+我们已经确定了ODE，只要每次采样，使预测的结果与 ODE的解 距离减小就好，但是这样的训练每次都需要求解一遍 ODE，效率很低。   
+另一种方法是使一条轨迹上相邻两个点的模型输出一致   
+训练的损失为   
+
+$$
+\begin{aligned} {{{\mathcal{L}}_{\mathrm{C D}}^{N} ( \theta, \theta^{-} ; \phi)}} & {{} {{}=\mathbb{E} [ \lambda( t_{n} ) d ( f_{\theta} ( \mathbf{x}_{t_{n+1}}, t_{n+1} ), f_{\theta^{-}} ( \hat{\mathbf{x}}_{t_{n}}^{\phi}, t_{n} )}} ]\\ {{{\hat{\mathbf{x}}}_{t_{n}}^{\phi}}} & {{} {{}=\mathbf{x}_{t_{n+1}}-( t_{n}-t_{n+1} ) \Phi( \mathbf{x}_{t_{n+1}}, t_{n+1} ; \phi)}} \\ \end{aligned} 
+$$
+
+其中  
+- $\phi()$ 是ODE solver
+- $\hat x_{t_n}^\phi$ 是从 $x_{t_{n+1}}$ 估计 $x_{t_n}$ 
+- n 服从选定时间步的均匀分布
+- $\theta^-$ 是 $\theta$ 的EMA版本，用于稳定训练
+- $d()$ 是距离公式，需要满足 $\ge 0$ 且当 $x = y$，$d(x, y) = 0$  
+- $\lambda()$ 是权重，论文中设定为 1
+
+>[!note]
+>###### 什么是EMA
+>
+>EMA(Exponential Moving Average) 指数移动平均  
+>$$
+>\theta_{EMA}^{(t)} = \alpha \cdot \theta_{EMA}^(t-1) + (1-\alpha) \cdot \theta^{(t)}
+>$$
+>
+>其中$\alpha$ 通常设置为接近1，提供一个变化平稳的参数，可用于提高泛化性能，平稳模型训练等
+
+##### Consistency Training(CT)
+
+CD中，我们使用了预训练模型来充当score function，重新训练需要另外一种方式来估计它。论文证明了一种新的估计方法  
+
+$$
+\nabla\operatorname{l o g} p_{t} ( \mathbf{x}_{t} )=-\mathbb{E} \left[ {\frac{\mathbf{x}_{t}-\mathbf{x}} {t^{2}}} \Big| \mathbf{x}_{t} \right] 
+$$
+
+于是得到损失为   
+$$
+\begin{array} {l} {{{\mathcal{L}_{\mathrm{C T}}^{N} ( \theta, \theta^{-} )}}} \\ {{{=\mathbb{E}_{\mathrm{n-M} [ 1, N-1 ], \mathbf{x} \sim p_{\mathrm{d y s}}, \mathbf{z} \sim\mathcal{N} ( 0, 1 )} \left[ \lambda( t_{n} ) d \left( \mathbf{f}_{\theta} ( \mathbf{x}+t_{n+1} \mathbf{z}, t_{n+1} ), \mathbf{f}_{\theta^{-}} ( \mathbf{x}+t_{n} \mathbf{z}, t_{n} ) \right) \right]}}} \\ \end{array} 
+$$
+
+- 其中 $z \in N(0,1)$
+
+然后是一些实验结果   
+- Diffusion > CD > diffusion distillation > CT
+- Heum ODE 效果好于 Euler's first-order solver，更高阶更精准
+- LPIPS 作为距离好于 L1 L2
+- 更小的N(步数)收敛更快但效果更差
 
 ### Latent Variable Space
 
@@ -485,7 +594,7 @@ Downsampling stack and an upsampling stack
 
 另外的，作为U-net的一个补充  
 为了能够为图像生成加上额外的条件，[ControlNet](https://arxiv.org/abs/2302.05543)  复制了U-net作为旁路处理额外条件 $c$  
-![Pasted image 20250408152249](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250408152249.png)  
+![Pasted image 20250408152249](https://raw.githubusercontent.com/Emisaber/pic_obsidian/main/Pasted%20image%2020250408152249.png)   
 ControlNet 做法如下  
 1. 冻结原参数 $\theta$
 2. 克隆原参数 $\theta_c$ 到旁路
@@ -562,3 +671,8 @@ Basically notes from Weng Lilian's blog
 - [Generative Modeling by Estimating Gradients of the Data Distribution \| Yang Song](https://yang-song.net/blog/2021/score/) 👈 
 - [扩散模型解读 (一)：DiT 详细解读](https://zhuanlan.zhihu.com/p/685867473)
 - [ViT（Vision Transformer）解析](https://zhuanlan.zhihu.com/p/445122996)
+- [从DDPM到Consistency Models（笔记）](https://zhuanlan.zhihu.com/p/623402026)
+- [一步生成的扩散模型：Consistency Models](https://zhuanlan.zhihu.com/p/706862530)
+- [生成扩散模型漫谈（五）：一般框架之SDE篇 - 科学空间\|Scientific Spaces](https://spaces.ac.cn/archives/9209)
+- [如何理解扩散模型中的SDE？](https://www.zhihu.com/question/616179189?write)
+- plus 众多已在文中加入链接的原论文
