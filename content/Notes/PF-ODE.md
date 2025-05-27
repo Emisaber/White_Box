@@ -534,7 +534,7 @@ $$
 
 - [\[2006.11239\] Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)
 - [\[2010.02502\] Denoising Diffusion Implicit Models](https://arxiv.org/abs/2010.02502)
-- [\[2006.11239\] Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)
+- [\[2011.13456\] Score-Based Generative Modeling through Stochastic Differential Equations](https://arxiv.org/abs/2011.13456)
 - [Diffusion学习笔记（三）——随机微分方程（SDE）](https://zhuanlan.zhihu.com/p/619188621)
 - [Diffusion学习笔记（四）——概率流ODE（Probability flow ODE）](https://zhuanlan.zhihu.com/p/622771940)
 - [生成扩散模型漫谈（三）：DDPM = 贝叶斯 + 去噪 - 科学空间\|Scientific Spaces](https://kexue.fm/archives/9164)
