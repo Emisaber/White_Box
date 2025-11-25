@@ -579,10 +579,10 @@ $$
 
 符号规定如下   
 $$
-\begin{flalign*}
+\begin{align*}
 &\boldsymbol{S}_{[i]} := \boldsymbol{S}_{iC} \in \mathbb{R}^{d \times d}, \square_{[i]} = \square_{iC+1:(i+1)C} \in \mathbb{R}^{C \times d} \text{ for } \square \in \{\boldsymbol{Q}, \boldsymbol{K}, \boldsymbol{V}, \boldsymbol{O}\};&\\
 &\square_{[i]}^r = \square_{iC+r}, \text{ for } \square \in \{\boldsymbol{q}, \boldsymbol{k}, \boldsymbol{v}, \boldsymbol{o}, \boldsymbol{s}\}.&
-\end{flalign*}
+\end{align*}
 $$
 
 也就是说，我们希望把Output的计算改写成矩阵形式的chunkwise运算，每个chunk的计算结果可以由该chunk对应的State和vectors求出  
