@@ -1,3 +1,8 @@
+---
+tags:
+  - DL
+---
+
 ## RNN
 
 最简单的RNN是 sequence 输入 squence输出，每次输入都更新hidden state，在需要输出时通过hidden state的变换得到输出   
