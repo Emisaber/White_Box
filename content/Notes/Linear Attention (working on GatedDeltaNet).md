@@ -868,7 +868,7 @@ transformer通过两层实现Induction Head可以看成是一种冗余，可能�
 $$
 \boldsymbol{S}_{t} = \boldsymbol{S}_{t-1} \left( \boldsymbol{\alpha}_{t} (\boldsymbol{I} - \boldsymbol{\beta}_{t} \boldsymbol{k}_{t} \boldsymbol{k}_{t}^{\boldsymbol{T}}) \right) + \boldsymbol{\beta}_{t} \boldsymbol{v}_{t} \boldsymbol{k}_{t}^{\boldsymbol{T}}
 $$
-对于模型设计方面应该没有太多值得讨论的，所以对于模型设计这个章节将集中在Qwen-NExT和Kimi Linear上，然后结合它们回到并行训练的算法优化  
+对于模型设计方面应该没有太多值得讨论的，所以对于模型设计这个章节将集中在代表性工作Qwen-NexT和Kimi Linear上，尝试深入看看代码实现，然后可能最后看看它们的训练过程  
 
 ### Qwen-Next
 
@@ -923,7 +923,318 @@ attn_output = attn_output.reshape(*input_shape, -1).contiguous()
 attention weight的dropout发生在Value加权之前，目的是避免模型过度学习token的对应关系，通过随机丢弃attention weight来避免过拟合，即使丢弃的token对next token prediction很重要  
 而Gated则是希望模型学会捕捉哪些token更加重要，选择性的筛选对应的信息量  
 
+> 这个方法的原论文获得了Nips best paper award，值得一读
+
+
 #### Qwen3-Next Gated DeltaNet  
+
+看看GatedDetlaNet大概是怎么写的  
+```python
+class Qwen3NextGatedDeltaNet(nn.Module):
+    def __init__(self, config: Qwen3NextConfig, layer_idx: int):
+		super().__init__()
+        # dim & size initialization
+        # ...
+        self.layer_idx = layer_idx # 通过layer idx来管理参数和每一层的计算似乎越来越流行？
+        # ...
+        self.conv_dim = self.key_dim * 2 + self.value_dim # Q dim + K dim + Value dim
+        self.conv1d = nn.Conv1d(
+            in_channels=self.conv_dim,
+            out_channels=self.conv_dim,
+            bias=False,
+            kernel_size=self.conv_kernel_size,
+            groups=self.conv_dim, # Depth-wise convolution
+            padding=self.conv_kernel_size - 1,
+        )
+
+        # projection of the input hidden states
+        projection_size_qkvz = self.key_dim * 2 + self.value_dim * 2
+        projection_size_ba = self.num_v_heads * 2
+        
+
+        # time step projection (discretization)
+        # instantiate once and copy inv_dt in init_weights of PretrainedModel
+        self.dt_bias = nn.Parameter(torch.ones(self.num_v_heads))
+        A = torch.empty(self.num_v_heads).uniform_(0, 16)
+        self.A_log = nn.Parameter(torch.log(A))
+
+        self.norm = (
+            Qwen3NextRMSNormGated(self.head_v_dim, eps=self.layer_norm_epsilon)
+            if FusedRMSNormGated is None
+            else FusedRMSNormGated(
+                self.head_v_dim,
+                eps=self.layer_norm_epsilon,
+                activation=self.activation,
+                device=torch.cuda.current_device(),
+                dtype=config.dtype if config.dtype is not None else torch.get_default_dtype(),
+            )
+        )
+
+        self.causal_conv1d_fn = causal_conv1d_fn
+        self.causal_conv1d_update = causal_conv1d_update or torch_causal_conv1d_update
+        self.chunk_gated_delta_rule = chunk_gated_delta_rule or torch_chunk_gated_delta_rule
+        self.recurrent_gated_delta_rule = fused_recurrent_gated_delta_rule or torch_recurrent_gated_delta_rule
+```
+
+一些除注释外较长的补充说明  
+- `qkvz` 中的z用于实现GatedRMSNorm，用于计算 `F.silu(z.to(torch.float32))`，也就是Gated
+- `dt_bias`和`A_log` 用于计算GatedDeltaNet的gate decay，来自 Mamba，实现data-dependant的state decay
+	- `g = -self.A_log.float().exp() * F.softplus(a.float() + self.dt_bias)`
+- 按照官方博客给出的架构图，在DeltaNet block内部使用的normalization方法是Gated版本的zero-centered RMSNorm，但是代码中实际上是 RMSNormGated
+- `casual_conv1d_fn` 用于训练，此时并行输入，可以直接做卷积；`causal_conv1d_update` 用于推理，由于自回归，需要存储 `conv_state`，也就缓存前3个token的状态来计算卷积
+
+```python
+def forward(
+	self,
+	hidden_states: torch.Tensor,
+	cache_params: Optional[Qwen3NextDynamicCache] = None,
+	cache_position: Optional[torch.LongTensor] = None,
+	attention_mask: Optional[torch.Tensor] = None,
+):
+	# qkvz, ab porjection and convolution and conv state update
+
+	if not use_precomputed_states:
+		core_attn_out, last_recurrent_state = self.chunk_gated_delta_rule(
+			query,
+			key,
+			value,
+			g=g,
+			beta=beta,
+			initial_state=None,
+			output_final_state=cache_params is not None,
+			use_qk_l2norm_in_kernel=True,
+		)
+
+	else:
+		core_attn_out, last_recurrent_state = self.recurrent_gated_delta_rule(
+			query,
+			key,
+			value,
+			g=g,
+			beta=beta,
+			initial_state=recurrent_state,
+			output_final_state=cache_params is not None,
+			use_qk_l2norm_in_kernel=True,
+		)
+
+	# Update cache
+	if cache_params is not None:
+		cache_params.recurrent_states[self.layer_idx] = last_recurrent_state
+
+	z_shape_og = z.shape
+	# reshape input data into 2D tensor
+	core_attn_out = core_attn_out.reshape(-1, core_attn_out.shape[-1])
+	z = z.reshape(-1, z.shape[-1])
+	core_attn_out = self.norm(core_attn_out, z)
+	core_attn_out = core_attn_out.reshape(z_shape_og)
+	core_attn_out = core_attn_out.reshape(core_attn_out.shape[0], core_attn_out.shape[1], -1)
+
+	output = self.out_proj(core_attn_out)
+	return output
+```
+
+重点看看delta rule如何计算   
+推理的时候使用recurrent实现，训练的时候使用chunk实现，两种计算 Flash Linear Attention都实现了高效的版本 `chunk_gated_delta_rule`, `fused_recurrent_gated_delta_rule`  
+同时代码中分别提供了一个pytorch的平替版   
+
+##### 对于recurrent  
+```python
+def torch_recurrent_gated_delta_rule(
+    query, key, value, g, beta, initial_state, output_final_state, use_qk_l2norm_in_kernel=False
+):
+    batch_size, num_heads, sequence_length, k_head_dim = key.shape
+    v_head_dim = value.shape[-1]
+    scale = 1 / (query.shape[-1] ** 0.5) # 甚至有scale
+    query = query * scale
+
+    core_attn_out = torch.zeros(batch_size, num_heads, sequence_length, v_head_dim).to(value)
+    last_recurrent_state = (
+        torch.zeros(batch_size, num_heads, k_head_dim, v_head_dim).to(value)
+        if initial_state is None
+        else initial_state.to(value)
+    )
+
+    for i in range(sequence_length):
+        q_t = query[:, :, i]
+        k_t = key[:, :, i]
+        v_t = value[:, :, i]
+        g_t = g[:, :, i].exp().unsqueeze(-1).unsqueeze(-1)
+        beta_t = beta[:, :, i].unsqueeze(-1)
+
+        last_recurrent_state = last_recurrent_state * g_t
+        kv_mem = (last_recurrent_state * k_t.unsqueeze(-1)).sum(dim=-2)
+        delta = (v_t - kv_mem) * beta_t
+        last_recurrent_state = last_recurrent_state + k_t.unsqueeze(-1) * delta.unsqueeze(-2)
+        core_attn_out[:, :, i] = (last_recurrent_state * q_t.unsqueeze(-1)).sum(dim=-2)
+
+    if not output_final_state:
+        last_recurrent_state = None
+    core_attn_out = core_attn_out.transpose(1, 2).contiguous().to(initial_dtype)
+    return core_attn_out, last_recurrent_state
+```
+
+核心逻辑  
+```python
+last_recurrent_state = (
+	torch.zeros(batch_size, num_heads, k_head_dim, v_head_dim).to(value)
+	if initial_state is None
+	else initial_state.to(value)
+)
+
+for i in range(sequence_length):
+	q_t = query[:, :, i]
+	k_t = key[:, :, i]
+	v_t = value[:, :, i]
+	g_t = g[:, :, i].exp().unsqueeze(-1).unsqueeze(-1)
+	beta_t = beta[:, :, i].unsqueeze(-1)
+
+	last_recurrent_state = last_recurrent_state * g_t
+	kv_mem = (last_recurrent_state * k_t.unsqueeze(-1)).sum(dim=-2)
+	delta = (v_t - kv_mem) * beta_t
+	last_recurrent_state = last_recurrent_state + k_t.unsqueeze(-1) * delta.unsqueeze(-2)
+	core_attn_out[:, :, i] = (last_recurrent_state * q_t.unsqueeze(-1)).sum(dim=-2)
+	core_attn_out = core_attn_out.transpose(1, 2).contiguous().to(initial_dtype)
+```
+
+回忆GatedDeltaNet的公式为  
+$$
+\boldsymbol{S}_{t} = \boldsymbol{S}_{t-1} \left( \boldsymbol{\alpha}_{t} (\boldsymbol{I} - \boldsymbol{\beta}_{t} \boldsymbol{k}_{t} \boldsymbol{k}_{t}^{\boldsymbol{T}}) \right) + \boldsymbol{\beta}_{t} \boldsymbol{v}_{t} \boldsymbol{k}_{t}^{\boldsymbol{T}}
+$$
+这里实现的逻辑应该是遵循了DeltaNet原本的顺序，希望把delta单独拿出来计算   
+$$
+\begin{align}
+\boldsymbol{S}_{t} &=\boldsymbol{\alpha}_{t}\boldsymbol{S}_{t-1} - (\boldsymbol{\alpha}_{t}  \boldsymbol{S}_{t-1} \boldsymbol{k}_{t}   -  \boldsymbol{v}_{t})\boldsymbol{\beta}_{t} \boldsymbol{k}_{t}^{\boldsymbol{T}}
+\\ &=\boldsymbol{\alpha}_{t}\boldsymbol{S}_{t-1} + (\boldsymbol{v}_{t} - \boldsymbol{\alpha}_{t}  \boldsymbol{S}_{t-1} \boldsymbol{k}_{t})\boldsymbol{\beta}_{t} \boldsymbol{k}_{t}^{\boldsymbol{T}}
+\end{align}
+$$
+先计算衰减后的last_recurrent_state，计算括号内的delta，将两者相加更新last_recurrent_state，然后再用query计算attention out  
+Recurrent的逻辑很简单，就是直接实现公式的写法  
+
+##### 对于chunkwise
+
+```python
+def torch_chunk_gated_delta_rule(
+    query,
+    key,
+    value,
+    g,
+    beta,
+    chunk_size=64,
+    initial_state=None,
+    output_final_state=False,
+    use_qk_l2norm_in_kernel=False,
+):
+    # transpose & padding ...
+
+    v_beta = value * beta.unsqueeze(-1)
+    k_beta = key * beta.unsqueeze(-1)
+    # reshape to chunks
+    query, key, value, k_beta, v_beta = [
+        x.reshape(x.shape[0], x.shape[1], -1, chunk_size, x.shape[-1]) for x in (query, key, value, k_beta, v_beta)
+    ]
+    g = g.reshape(g.shape[0], g.shape[1], -1, chunk_size)
+    mask = torch.triu(torch.ones(chunk_size, chunk_size, dtype=torch.bool, device=query.device), diagonal=0)
+
+    # chunk decay
+    g = g.cumsum(dim=-1)
+    decay_mask = ((g.unsqueeze(-1) - g.unsqueeze(-2)).tril().exp().float()).tril()
+    attn = -((k_beta @ key.transpose(-1, -2)) * decay_mask).masked_fill(mask, 0)
+    for i in range(1, chunk_size):
+        row = attn[..., i, :i].clone()
+        sub = attn[..., :i, :i].clone()
+        attn[..., i, :i] = row + (row.unsqueeze(-1) * sub).sum(-2)
+    attn = attn + torch.eye(chunk_size, dtype=attn.dtype, device=attn.device)
+    value = attn @ v_beta
+    k_cumdecay = attn @ (k_beta * g.exp().unsqueeze(-1))
+    # for each chunk
+    for i in range(0, total_sequence_length // chunk_size):
+        q_i, k_i, v_i = query[:, :, i], key[:, :, i], value[:, :, i]
+        attn = (q_i @ k_i.transpose(-1, -2) * decay_mask[:, :, i]).masked_fill_(mask, 0)
+        v_prime = (k_cumdecay[:, :, i]) @ last_recurrent_state
+        v_new = v_i - v_prime
+        attn_inter = (q_i * g[:, :, i, :, None].exp()) @ last_recurrent_state
+        core_attn_out[:, :, i] = attn_inter + attn @ v_new
+        last_recurrent_state = (
+            last_recurrent_state * g[:, :, i, -1, None, None].exp()
+            + (k_i * (g[:, :, i, -1, None] - g[:, :, i]).exp()[..., None]).transpose(-1, -2) @ v_new
+        )
+
+    if not output_final_state:
+        last_recurrent_state = None
+    core_attn_out = core_attn_out.reshape(core_attn_out.shape[0], core_attn_out.shape[1], -1, core_attn_out.shape[-1])
+    core_attn_out = core_attn_out[:, :, :sequence_length]
+    core_attn_out = core_attn_out.transpose(1, 2).contiguous().to(initial_dtype)
+    return core_attn_out, last_recurrent_state
+```
+
+chunkwise的计算遵循的同样是  
+$$
+\boldsymbol{W}_{[t]} = \boldsymbol{T}_{[t]} \operatorname{diag}(\boldsymbol{\beta}_{[t]}) \boldsymbol{K}_{[t]}, \quad \boldsymbol{U}_{[t]} = \boldsymbol{T}_{[t]} \operatorname{diag}(\boldsymbol{\beta}_{[t]}) \boldsymbol{V}_{[t]}
+$$
+$$
+\begin{align*}
+\boldsymbol{S}_{[i+1]} &= \boldsymbol{S}_{[i]}(\boldsymbol{I} - \boldsymbol{W}_{[i]}^{\top} \boldsymbol{K}_{[i]}) + \boldsymbol{U}_{[i]}^{\top} \boldsymbol{K}_{[i]} \\
+&= \boldsymbol{S}_{[i]} + (\boldsymbol{U}_{[i]} - \boldsymbol{W}_{[i]} \boldsymbol{S}_{[i]}^{\top})^{\top} \boldsymbol{K}_{[i]} \in \mathbb{R}^{d \times d} \\
+\boldsymbol{O}_{[i]} &= \boldsymbol{Q}_{[i]} \boldsymbol{S}_{[i]}^{\top} + (\boldsymbol{Q}_{[i]} \boldsymbol{K}_{[i]}^{\top} \odot \boldsymbol{M}) (\boldsymbol{U}_{[i]} - \boldsymbol{W}_{[i]} \boldsymbol{S}_{[i]}^{\top}) \in \mathbb{R}^{C \times d}
+\end{align*}
+$$
+
+只不过增加了Gate  
+
+分成两个部分，我们先计算 W 和 U  
+```python
+g = g.cumsum(dim=-1)
+decay_mask = ((g.unsqueeze(-1) - g.unsqueeze(-2)).tril().exp().float()).tril()
+attn = -((k_beta @ key.transpose(-1, -2)) * decay_mask).masked_fill(mask, 0)
+for i in range(1, chunk_size):
+	row = attn[..., i, :i].clone()
+	sub = attn[..., :i, :i].clone()
+	attn[..., i, :i] = row + (row.unsqueeze(-1) * sub).sum(-2)
+attn = attn + torch.eye(chunk_size, dtype=attn.dtype, device=attn.device)
+value = attn @ v_beta
+k_cumdecay = attn @ (k_beta * g.exp().unsqueeze(-1))
+```
+
+这里的attn实际上是之前谈到的邻接矩阵 A，遍历chunk_size和加一个单位阵计算矩阵T，然后根据T计算得到 W(`k_cumdecay`)，U(`value`)  
+
+再然后正式计算注意力  
+```python
+for i in range(0, total_sequence_length // chunk_size):
+	q_i, k_i, v_i = query[:, :, i], key[:, :, i], value[:, :, i]
+	attn = (q_i @ k_i.transpose(-1, -2) * decay_mask[:, :, i]).masked_fill_(mask, 0)
+	v_prime = (k_cumdecay[:, :, i]) @ last_recurrent_state
+	v_new = v_i - v_prime
+	attn_inter = (q_i * g[:, :, i, :, None].exp()) @ last_recurrent_state
+	core_attn_out[:, :, i] = attn_inter + attn @ v_new
+	last_recurrent_state = (
+		last_recurrent_state * g[:, :, i, -1, None, None].exp()
+		+ (k_i * (g[:, :, i, -1, None] - g[:, :, i]).exp()[..., None]).transpose(-1, -2) @ v_new
+	)
+```
+$$
+\boldsymbol{O}_{[i]} = \boldsymbol{Q}_{[i]} \boldsymbol{S}_{[i]}^{\top} + (\boldsymbol{Q}_{[i]} \boldsymbol{K}_{[i]}^{\top} \odot \boldsymbol{M}) (\boldsymbol{U}_{[i]} - \boldsymbol{W}_{[i]} \boldsymbol{S}_{[i]}^{\top}) \in \mathbb{R}^{C \times d}
+$$
+
+先计算中间的标准attn $(\boldsymbol{Q}_{[i]} \boldsymbol{K}_{[i]}^{\top} \odot \boldsymbol{M})$ `attn`，再计算与其相乘的 $(\boldsymbol{U}_{[i]} - \boldsymbol{W}_{[i]} \boldsymbol{S}_{[i]}^{\top})$ `v_new`，计算第一项 $\boldsymbol{Q}_{[i]} \boldsymbol{S}_{[i]}^{\top}$ `attn_inter`，最后进行相加得到`attn_out`  
+
+至于状态更新  
+$$
+\boldsymbol{S}_{[i+1]} 
+= \boldsymbol{S}_{[i]} + (\boldsymbol{U}_{[i]} - \boldsymbol{W}_{[i]} \boldsymbol{S}_{[i]}^{\top})^{\top} \boldsymbol{K}_{[i]} \in \mathbb{R}^{d \times d}
+$$
+中间项就是 `v_new`，与K相乘后加入旧状态，得到新的 `last_recurrent_state`   
+
+至于flash linear attention内部是怎么实现的，fla是基于triton实现的，等我学习triton之后可能再回来看看  
+
+
+#### QK-Norm
+
+
+
+#### MTP
+
+
+
 
 
 
