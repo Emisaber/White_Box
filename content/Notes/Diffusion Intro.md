@@ -10,3 +10,4 @@ tags:
 - A difficult but comprehensive version [[Diffusion]]
 - An application [[Stable Diffusion & DreamBooth & History]]
 - Try hard to understand unified diffusion theory [[PF-ODE]]
+- flow matching [[Flow Matching]]
