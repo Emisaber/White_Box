@@ -322,11 +322,11 @@ define the marginal score function of $p_t$ as $\nabla \log p_t(x)$
 
 > remember that SDE is denoted as 
 > $$
-\begin{align*}
-dX_t &= u_t(X_t)dt + \sigma_t dW_t \\
-X_0 &= x_0
-\end{align*}
-$$
+> \begin{align*}
+> dX_t &= u_t(X_t)dt + \sigma_t dW_t \\
+> X_0 &= x_0
+> \end{align*}
+> $$
 
 #### Theorem 13
 
