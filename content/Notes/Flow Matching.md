@@ -1,7 +1,7 @@
 ---
 tags:
   - DL
-  - LLM
+  - Generative
   - Diffusion
 ---
 
